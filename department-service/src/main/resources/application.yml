@@ -1,0 +1,49 @@
+#server:
+# port: 8080
+
+spring:
+ application:
+  name: department-service
+ config:
+  import: optional:configserver:http://localhost:8888
+ rabbitmq:
+   host: localhost
+   port: 5672
+   username: guest
+   password: guest
+ zipkin:
+  base-url: http://127.0.0.1:9411/
+
+management:
+  endpoints:
+    web:
+      exposure:
+       include:
+        - busrefresh
+  tracing:
+   sampling:
+    probability: 1.0
+
+logging:
+  pattern:
+   level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+  level:
+   org:
+    springframework:
+     web: DEBUG
+
+
+# datasource:
+#  url: jdbc:mysql://localhost:3306/department_db?useSSL=false&serverTimezone=UTC
+#  username: root
+#  password: 123456
+# jpa:
+#  open-in-view: false
+#  hibernate:
+#   ddl-auto: update
+#
+#eureka:
+# instance:
+#  client:
+#   serverUrl:
+#    defaultZone: http://localhost:8761/eureka/

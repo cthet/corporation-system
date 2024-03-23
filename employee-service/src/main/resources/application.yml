@@ -1,0 +1,77 @@
+#server:
+# port: 8081
+
+spring:
+ application:
+  name: employee-service
+ config:
+  import: optional:configserver:http://localhost:8888
+ rabbitmq:
+  host: localhost
+  port: 5672
+  username: guest
+  password: guest
+ zipkin:
+  base-url: http://127.0.0.1:9411/
+
+
+management:
+ endpoints:
+  web:
+   exposure:
+    include:
+     - busrefresh
+     - health
+  tracing:
+   sampling:
+    probability: 1.0
+ endpoint:
+  health:
+   show-details: always
+ health:
+  circuitbreakers:
+   enabled: true
+
+
+logging:
+ pattern:
+  level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
+ level:
+  org:
+   springframework:
+    web: DEBUG
+
+resilience4j:
+ circuitbreaker:
+  instances:
+   employee-service:
+    registerHealthIndicator: true
+    failureRateThreshold: 50
+    minimumNumberOfCalls: 5
+    automaticTransitionFromOpenToHalfOpenEnabled: true
+    waitDurationInOpenState: 5s
+    permittedNumberOfCallsInHalfOpenState: 3
+    slidingWindowSize: 10
+    slidingWindowType: COUNT_BASED
+ retry:
+  instances:
+   employee-service:
+    waitDuration: 1s
+    registerHealthIndicator: true
+    maxRetryAttempts: 5
+
+
+# datasource:
+#  url: jdbc:mysql://localhost:3306/employee_db?useSSL=false&serverTimezone=UTC
+#  username: root
+#  password: 123456
+# jpa:
+#  open-in-view: false
+#  hibernate:
+#   ddl-auto: update
+#
+#eureka:
+# instance:
+#  client:
+#   serverUrl:
+#    defaultZone: http://localhost:8761/eureka/
