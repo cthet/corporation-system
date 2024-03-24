@@ -1,12 +1,13 @@
 package com.corporation.departmentservice.service.impl;
 
-import com.corporation.departmentservice.dto.DepartmentDto;
 import com.corporation.departmentservice.mapper.DepartmentMapper;
 import com.corporation.departmentservice.repository.DepartmentRepository;
+import com.corporation.departmentservice.service.DepartmentService;
+
 import org.springframework.stereotype.Service;
 
+import com.corporation.departmentservice.dto.DepartmentDto;
 import com.corporation.departmentservice.entity.Department;
-import com.corporation.departmentservice.service.DepartmentService;
 
 @Service
 public class DepartmentServiceImpl implements DepartmentService{
